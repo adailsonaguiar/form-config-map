@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Button, Form, Modal, Select } from "semantic-ui-react";
-
-// import { Container } from './styles';
+import { Button, Form, Modal } from "semantic-ui-react";
 
 function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
   const [category, setCategory] = useState(1);
@@ -67,6 +65,7 @@ function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
 
   function handleCategory() {
     setCategoryConcat(categories[category]);
+    setOpen(false);
   }
 
   return (

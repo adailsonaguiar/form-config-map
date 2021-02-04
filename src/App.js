@@ -22,8 +22,6 @@ function App() {
     locations: [],
   });
 
-  const [locations, setLocations] = useState([]);
-
   function setFieldValueCenter(event) {
     const { name, value } = event.target;
     setValues({ ...values, center: { ...values.center, [name]: value } });
@@ -52,15 +50,21 @@ function App() {
   }
 
   function setLocationConcat(location) {
-    const locationsCopy = locations;
-    location.latlng = getArrayLatnlng(location.latlng);
+    const locationsCopy = values.locations;
+    if (!Array.isArray(location.latlng))
+      location.latlng = getArrayLatnlng(location.latlng);
     locationsCopy.push(location);
-    setLocations(locationsCopy);
+
+    setValues({
+      ...values,
+      locations: locationsCopy,
+    });
   }
 
   const handleSaveToPC = () => {
     const valuesCopy = values;
-    values.center.latlng = getArrayLatnlng(values.center.latlng);
+    if (!Array.isArray(values.center.latlng))
+      values.center.latlng = getArrayLatnlng(values.center.latlng);
     const fileData = JSON.stringify(valuesCopy);
     const blob = new Blob([fileData], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -131,7 +135,17 @@ function App() {
                 value={values.map.backgroundColor}
                 onChange={setFieldValueMap}
               />
+              <div
+                id="123k"
+                style={{
+                  width: "100%",
+                  height: "20px",
+                  backgroundColor: values.map.backgroundColor,
+                  marginTop: "10px",
+                }}
+              ></div>
             </Form.Field>
+
             <Form.Field>
               <label>Tile Layer Style</label>
               <input

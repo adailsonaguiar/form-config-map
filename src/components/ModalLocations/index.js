@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button, Form, Modal, Select } from "semantic-ui-react";
+import { Button, Form, Modal } from "semantic-ui-react";
 
 function ModalLocations({ setOpen, setLocationConcat, ...rest }) {
-  const [values, setValues] = useState({});
-  const [category, setCategory] = useState(1);
+  const [values, setValues] = useState({ id: 1 });
 
   const categories = {
     1: {
@@ -66,6 +65,7 @@ function ModalLocations({ setOpen, setLocationConcat, ...rest }) {
 
   function handleCategory() {
     setLocationConcat(values);
+    setOpen(false);
   }
 
   function setFieldValue(event) {
@@ -77,7 +77,6 @@ function ModalLocations({ setOpen, setLocationConcat, ...rest }) {
     const category = categories[e.target.value];
     setValues({ ...values, id: category.id });
   }
-  console.log(values);
 
   return (
     <Modal
