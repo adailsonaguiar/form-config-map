@@ -86,6 +86,24 @@ function App() {
           <Grid.Column>
             <Header as="h2">Centro Mapa</Header>
             <Form.Field>
+              <label>Label Empreendimento (Center)</label>
+              <input
+                placeholder="Empreendimento X"
+                name="point"
+                value={values.center.point}
+                onChange={setFieldValueCenter}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Complementary text</label>
+              <input
+                placeholder="Empreendimento X"
+                name="distance"
+                value={values.center.distance}
+                onChange={setFieldValueCenter}
+              />
+            </Form.Field>
+            <Form.Field>
               <label>LatLng Empreendimento (Center)</label>
               <input
                 placeholder="-23.61535612556353, -46.67139123381976"
@@ -186,11 +204,14 @@ function App() {
             setOpen={(state) => setOpen({ ...open, modalCategory: state })}
             setCategoryConcat={setCategoryConcat}
           />
-          <ModalLocations
-            open={open.modalLocation}
-            setOpen={(state) => setOpen({ ...open, modalLocation: state })}
-            setLocationConcat={setLocationConcat}
-          />
+          {!!Object.keys(values.categories).length && (
+            <ModalLocations
+              open={open.modalLocation}
+              setOpen={(state) => setOpen({ ...open, modalLocation: state })}
+              setLocationConcat={setLocationConcat}
+              categories={values.categories}
+            />
+          )}
 
           <Button type="submit" primary>
             Download
