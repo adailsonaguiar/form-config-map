@@ -61,6 +61,17 @@ function App() {
     });
   }
 
+  function removeLocation(indexOf) {
+    const locationsCopy = values.locations.filter(
+      (_, index) => index !== indexOf
+    );
+
+    setValues({
+      ...values,
+      locations: locationsCopy,
+    });
+  }
+
   const handleSaveToPC = () => {
     const valuesCopy = values;
     if (!Array.isArray(values.center.latlng))
@@ -188,13 +199,22 @@ function App() {
           </Grid.Column>
           <Grid.Column>
             {!!values.locations.length && <Header as="h2">Locations</Header>}
-            <div>
-              {values.locations.map((item, index) => (
+            {values.locations.map((item, index) => (
+              <div className="locations-row">
                 <li key={index}>
-                  {item.point} {item.latlng}
+                  {item.point} {String(item.latlng)}
                 </li>
-              ))}
-            </div>
+                <Button
+                  type="button"
+                  basic
+                  color="red"
+                  size="mini"
+                  onClick={() => removeLocation(index)}
+                >
+                  remove
+                </Button>
+              </div>
+            ))}
           </Grid.Column>
         </Grid>
 
