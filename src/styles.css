@@ -1,0 +1,14 @@
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 800px;
+  padding-top: 20px;
+}
+
+.buttons-wrapper {
+  padding: 14px;
+}

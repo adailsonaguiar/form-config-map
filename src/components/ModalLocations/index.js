@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Button, Form, Modal, Select } from "semantic-ui-react";
 
-// import { Container } from './styles';
-
-function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
+function ModalLocations({ setOpen, setLocationConcat, ...rest }) {
+  const [values, setValues] = useState({});
   const [category, setCategory] = useState(1);
 
   const categories = {
@@ -66,8 +65,19 @@ function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
   };
 
   function handleCategory() {
-    setCategoryConcat(categories[category]);
+    setLocationConcat(values);
   }
+
+  function setFieldValue(event) {
+    const { name, value } = event.target;
+    setValues({ ...values, [name]: value });
+  }
+
+  function setIdLocation(e) {
+    const category = categories[e.target.value];
+    setValues({ ...values, id: category.id });
+  }
+  console.log(values);
 
   return (
     <Modal
@@ -76,19 +86,43 @@ function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
       onOpen={() => setOpen(true)}
       trigger={
         <Button type="button" secondary>
-          Add Category
+          Add Location
         </Button>
       }
     >
-      <Modal.Header>Add Category</Modal.Header>
+      <Modal.Header>Add Location</Modal.Header>
       <Modal.Content>
         <Form>
           <Form.Field>
-            <label>Select category</label>
-            <select
-              placeholder="Select the Icon"
-              onChange={(e) => setCategory(e.target.value)}
-            >
+            <label>Label</label>
+            <input
+              placeholder="Empreendimento X"
+              name="point"
+              value={values.point}
+              onChange={setFieldValue}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>LatLng</label>
+            <input
+              placeholder="-23.61535612556353, -46.67139123381976"
+              name="latlng"
+              value={values.latlng}
+              onChange={setFieldValue}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Texto Adicional</label>
+            <input
+              placeholder="500m"
+              name="distance"
+              value={values.distance}
+              onChange={setFieldValue}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Select the category</label>
+            <select onChange={setIdLocation}>
               {Object.keys(categories).map((item, index) => (
                 <option key={index} value={item}>
                   {categories[item].label}
@@ -107,4 +141,4 @@ function ModalCategory({ setOpen, setCategoryConcat, ...rest }) {
   );
 }
 
-export default ModalCategory;
+export default ModalLocations;

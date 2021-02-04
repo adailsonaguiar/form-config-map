@@ -4,6 +4,7 @@ import { Form, Button, Grid, Header, Modal, Select } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "./styles.css";
 import ModalCategory from "./components/ModalCategory";
+import ModalLocations from "./components/ModalLocations";
 
 function App() {
   const [values, setValues] = useState({
@@ -18,15 +19,10 @@ function App() {
       tileLayer: "v1/fabioassis/ckkejh4zs1bkj18o90tlxbbcd",
     },
     categories: {},
-    locations: [
-      {
-        id: 0,
-        point: "Gafisa Invert",
-        latlng: [-23.61535612556353, -46.67139123381976],
-        distance: "R. Otávio Tarquínio de Sousa, 1222",
-      },
-    ],
+    locations: [],
   });
+
+  const [locations, setLocations] = useState([]);
 
   function setFieldValueCenter(event) {
     const { name, value } = event.target;
@@ -49,9 +45,23 @@ function App() {
       setCategoriesInValues({ [category.id]: category });
     }
   }
-  console.log(values);
+
+  function getArrayLatnlng(latlng) {
+    const valueSplit = latlng.split(",");
+    return [Number(valueSplit[0]), Number(valueSplit[1])];
+  }
+
+  function setLocationConcat(location) {
+    const locationsCopy = locations;
+    location.latlng = getArrayLatnlng(location.latlng);
+    locationsCopy.push(location);
+    setLocations(locationsCopy);
+  }
+
   const handleSaveToPC = () => {
-    const fileData = JSON.stringify(values);
+    const valuesCopy = values;
+    values.center.latlng = getArrayLatnlng(values.center.latlng);
+    const fileData = JSON.stringify(valuesCopy);
     const blob = new Blob([fileData], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -60,7 +70,10 @@ function App() {
     link.click();
   };
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({
+    modalCategory: false,
+    modalLocation: false,
+  });
 
   return (
     <div className="container">
@@ -74,14 +87,7 @@ function App() {
                 placeholder="-23.61535612556353, -46.67139123381976"
                 name="latlng"
                 value={values.center.latlng}
-                onChange={(e) => {
-                  const valueSplit = e.target.value.split(",");
-                  const latlng = [Number(valueSplit[0]), Number(valueSplit[1])];
-                  setValues({
-                    ...values,
-                    center: { ...values.center, latlng: latlng },
-                  });
-                }}
+                onChange={setFieldValueCenter}
               />
             </Form.Field>
             <Form.Field>
@@ -143,21 +149,39 @@ function App() {
               <Header as="h2">Categorias</Header>
             )}
             <div>
-              {Object.keys(values.categories).map((item) => (
-                <li>{values.categories[item].label}</li>
+              {Object.keys(values.categories).map((item, index) => (
+                <li key={index}>{values.categories[item].label}</li>
               ))}
             </div>
           </Grid.Column>
-          <Grid.Column></Grid.Column>
+          <Grid.Column>
+            {!!values.locations.length && <Header as="h2">Locations</Header>}
+            <div>
+              {values.locations.map((item, index) => (
+                <li key={index}>
+                  {item.point} {item.latlng}
+                </li>
+              ))}
+            </div>
+          </Grid.Column>
         </Grid>
 
-        <ModalCategory
-          open={open}
-          setOpen={setOpen}
-          setCategoryConcat={setCategoryConcat}
-        />
+        <div className="buttons-wrapper">
+          <ModalCategory
+            open={open.modalCategory}
+            setOpen={(state) => setOpen({ ...open, modalCategory: state })}
+            setCategoryConcat={setCategoryConcat}
+          />
+          <ModalLocations
+            open={open.modalLocation}
+            setOpen={(state) => setOpen({ ...open, modalLocation: state })}
+            setLocationConcat={setLocationConcat}
+          />
 
-        <Button type="submit">Submit</Button>
+          <Button type="submit" primary>
+            Download
+          </Button>
+        </div>
       </Form>
     </div>
   );
